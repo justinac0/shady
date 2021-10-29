@@ -8,7 +8,7 @@ Shady is a glsl shader tool heavily inspired by shadertoy.
 ## How to build
 use premake5 to build project files (currently vs2019 is the only supported build system...).
 
-```premake5 vc2019```
+```premake5 vs2019```
 
 ## Development
 Shady is early in development, currently this is a personal project. I will
