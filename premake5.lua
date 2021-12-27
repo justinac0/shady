@@ -15,42 +15,33 @@ configurations {
 project  "shady"
 kind     "ConsoleApp"
 language "C"
+cdialect "C89"
 
 architecture "x86_64"
 
--- objdir "build"
+objdir "objects"
 
 targetname "shady"
-targetdir  ""-- "bin\\%{cfg.buildcfg}"
+targetdir  "./"-- "build\\%{cfg.buildcfg}"
 
 files {
-   "*.h",
-   "*.c",
+   "source/*.h",
+   "source/*.c",
   
-   "deps\\glad\\*.c"
+   "source/glad/*.c"
 }
 
 --------------------------------------------------------------------------------
 -- Setup Dependences --
 -----------------------
 
-local GLFW_INCLUDES = "deps\\glfw-3.3.4\\include"
-local GLFW_LIBS     = "deps\\glfw-3.3.4\\lib-vc2019"
-
-function include_glfw()
-   includedirs(GLFW_INCLUDES)
-end
-
 function link_glfw()
-   libdirs { GLFW_LIBS }
-
    filter "kind:not StaticLib"
-   links { "opengl32", "glfw3", "gdi32", "winmm" }
+   links { "glfw", 'dl' }
 end
 
-includedirs("deps\\glad\\")
+includedirs("source/glad/")
 
-include_glfw()
 link_glfw()
 
 --------------------------------------------------------------------------------

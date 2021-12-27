@@ -1,18 +1,31 @@
 # Shady
-Shady is a glsl shader tool heavily inspired by shadertoy.
+Shady is a simple glsl writing environment created rapid shader development. I created Shady for educational reasons (graphics programming is cool) and use it
+for that capacity.
 
-## Features
-- Hot Loading Shaders (press F5)
-- Accessable Uniforms (Time, Window Size, Mouse Position)
+## Functionality
 
-## How to build
-use premake5 to build project files (currently vs2019 is the only supported build system...).
+||Key|
+|-|-|
+|Live reloading shaders| F5 |
 
-```premake5 vs2019```
+## Compiling
+### Dependencies
+- [premake5](https://premake.github.io/)
+- [GLFW](glfw.org)
+- [glad](https://glad.dav1d.de/)
 
-## Development
-Shady is early in development, currently this is a personal project. I will
-be adding/making shady better when I feel like it.
+### Linux
+- Intall [GLFW](glfw.org) development binaries
+- Run `premake5 gmake` in project directory
+- Run `make all` in project directory
 
-Graphics programming is a interest of mine. I'm using shady to aid me in learning
-graphics programming concepts.
+### Cleanup
+- Run `make clean` in project directory
+
+## Todo
+- Load shaders by folder
+- Shader management UI
+- Add uniforms at runtime (through UI)
+- ...
+
+<!-- ## Showcase -->

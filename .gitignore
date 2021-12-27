@@ -50,3 +50,9 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+objects/
+Makefile
+premake5
+shady
+shday.make

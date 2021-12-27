@@ -1,10 +1,36 @@
-#include "shady.h"
+#include "s_internal.h"
 
-s_Shader s_create_shader(const int8_t* src, uint32_t target) {
-    s_Shader shader;
+char* s_internal_read_file(const char* file_path) {
+    /* Open file stream as read-only */
+    FILE* f = fopen(file_path, "r");
+	if (f == NULL) return NULL;
+
+    /* Jump to the end of the file */
+    fseek(f, 0, SEEK_END);
+
+    /* Get the number of ascii characters in file */
+    size_t length = ftell(f);
+
+    /* Set file stream to start */
+    rewind(f);
+
+    /* Allocate space for file contents */
+    char* contents = (char*) calloc(length, sizeof (char));
+    if (contents == NULL) return NULL;
+
+    /* Read file to 'contents' */
+    if (fread(contents, sizeof (char), length, f) == 0) return NULL;
+
+    fclose(f);
+
+    return contents;
+}
+
+GLuint s_internal_shader_create(const char* source, GLuint target) {
+    GLuint shader;
     shader = glCreateShader(target);
 
-	glShaderSource(shader, 1, &src, 0);
+	glShaderSource(shader, 1, (const char* const*)&source, 0);
 	glCompileShader(shader);
 
 	int compile_status = 0;
@@ -25,8 +51,12 @@ s_Shader s_create_shader(const int8_t* src, uint32_t target) {
 	return shader;
 }
 
-s_Program s_create_program(s_Shader vertex, s_Shader fragment) {
-    s_Program program = glCreateProgram();
+extern void s_internal_shader_destroy(GLuint shader) {
+    glDeleteShader(shader);
+}
+
+GLuint s_internal_program_create(GLuint vertex, GLuint fragment) {
+    GLuint program = glCreateProgram();
     glAttachShader(program, vertex);
     glAttachShader(program, fragment);
 
@@ -43,29 +73,26 @@ s_Program s_create_program(s_Shader vertex, s_Shader fragment) {
 
         glDeleteProgram(program);
 
-        glDeleteShader(vertex);
-        glDeleteShader(fragment);
+        s_internal_shader_destroy(vertex);
+        s_internal_shader_destroy(fragment);
 
         fprintf(stderr, "Linking Error: %s\n", log);
 
         free(log);
     }
 
-    glDeleteShader(vertex);
-    glDeleteShader(fragment);
-
     return program;
 }
 
-void s_destroy_program(s_Program id) {
-    glDeleteProgram(id);
+extern void s_internal_program_destroy(GLuint program) {
+    glDeleteProgram(program);
 }
 
-uint32_t s_create_surface() {
+GLuint s_internal_surface_create(void) {
     float quad[] = {
 		-1, 1,
 		 1, 1,
-		 1,-1
+		 1,-1,
 		-1,-1
 	};
 
@@ -76,10 +103,4 @@ uint32_t s_create_surface() {
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
     return buffer; 
-}
-
-void s_update_surface(uint32_t buffer, uint32_t program) {
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glEnableVertexAttribArray(0);
-    glDrawArrays(GL_QUADS, 0, 4);
 }
