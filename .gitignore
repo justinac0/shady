@@ -56,3 +56,5 @@ Makefile
 premake5
 shady
 shday.make
+
+.vscode
