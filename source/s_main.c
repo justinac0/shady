@@ -1,12 +1,14 @@
 #include "window.h"
 #include "shady.h"
 
-const char* VERTEX_SHADER_PATH      = "examples/_TEMPLATE_/vertex.glsl";
-const char* FRAGMENT_SHADER_PATH    = "examples/_TEMPLATE_/fragment.glsl";
-
 void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_F5 && action == GLFW_PRESS) {
-        shady_load(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH);
+        int loaded = shady_load_folder("examples/_TEMPLATE_/");
+
+        if (loaded == SHADY_OPENGL_FINE)
+            printf("[Shady] : live-reload complete...\n");
+        else
+            printf("[Shady] : live-reload failed...\n");
     }
 }
 
@@ -14,10 +16,10 @@ int main(int argc, char const *argv[]) {
     GLFWwindow* window = window_create(glfw_key_callback);
 
     shady_init();
-    shady_load(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH);
+
+    shady_load_folder("examples/_TEMPLATE_/");
 
     while (!window_should_close(window)) {
-
         int width, height;
         glfwGetWindowSize(window, &width, &height);
         glViewport(0, 0, width, height);
@@ -25,7 +27,10 @@ int main(int argc, char const *argv[]) {
         double mx, my;
         glfwGetCursorPos(window, &mx, &my);
 
-        shady_send_uniforms(width, height, mx, my, glfwGetTime());
+        shady_send_vec2f(width, height, "u_ScreenResolution");
+        shady_send_vec2f(mx, my, "u_Mouse");
+        shady_send_float(glfwGetTime(), "u_Time");
+
         shady_update();
 
         window_update(window);

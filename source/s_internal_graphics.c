@@ -1,31 +1,5 @@
 #include "s_internal.h"
 
-char* s_internal_read_file(const char* file_path) {
-    /* Open file stream as read-only */
-    FILE* f = fopen(file_path, "r");
-	if (f == NULL) return NULL;
-
-    /* Jump to the end of the file */
-    fseek(f, 0, SEEK_END);
-
-    /* Get the number of ascii characters in file */
-    size_t length = ftell(f);
-
-    /* Set file stream to start */
-    rewind(f);
-
-    /* Allocate space for file contents */
-    char* contents = (char*) calloc(length, sizeof (char));
-    if (contents == NULL) return NULL;
-
-    /* Read file to 'contents' */
-    if (fread(contents, sizeof (char), length, f) == 0) return NULL;
-
-    fclose(f);
-
-    return contents;
-}
-
 GLuint s_internal_shader_create(const char* source, GLuint target) {
     GLuint shader;
     shader = glCreateShader(target);
@@ -46,6 +20,8 @@ GLuint s_internal_shader_create(const char* source, GLuint target) {
 
         fprintf(stderr, "Compilation Error: %s.\n", log);
 		free(log);
+
+        return 0;
 	}
 
 	return shader;

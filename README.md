@@ -23,9 +23,8 @@ as a tool in learning shader programming.
 - Run `make clean` in project directory
 
 ## Todo
+- Cross-Platform (Windows, Linux)
 - Load shaders by folder
 - Shader management UI
 - Add uniforms at runtime (through UI)
 - ...
-
-<!-- ## Showcase -->

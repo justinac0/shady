@@ -3,10 +3,10 @@
 #include "s_internal.h"
 
 /* Interal Shady context */
-TShadyContext* context = NULL;
+ShadyContext* context = NULL;
 
 int shady_init(void) {
-    context = (TShadyContext*) malloc(sizeof (TShadyContext));
+    context = (ShadyContext*) malloc(sizeof (ShadyContext));
     if (!context) {
         return SHADY_INIT_FAILURE;
     }
@@ -22,8 +22,11 @@ void shady_terminate(void) {
 }
 
 int shady_load(const char* vertex_path, const char* fragment_path) {
-    GLuint vertex_shader;
-    GLuint fragment_shader;
+    if (context->shader_program != 0)
+        s_internal_program_destroy(context->shader_program);
+
+    GLuint vertex_shader    = 0;
+    GLuint fragment_shader  = 0;
 
     char* vertex_source   = NULL;
     char* fragment_source = NULL;
@@ -32,7 +35,7 @@ int shady_load(const char* vertex_path, const char* fragment_path) {
     vertex_source   = s_internal_read_file(vertex_path);
     fragment_source = s_internal_read_file(fragment_path);
 
-    if (!vertex_source | !fragment_source) return 0; /* failure */
+    if (!vertex_source || !fragment_source) return SHADY_OPENGL_ERROR; /* failure */
 
     /* create shaders from source */
     vertex_shader   = s_internal_shader_create(vertex_source,   GL_VERTEX_SHADER);
@@ -44,16 +47,28 @@ int shady_load(const char* vertex_path, const char* fragment_path) {
     /* create shader program */
     context->shader_program = s_internal_program_create(vertex_shader, fragment_shader);
 
-    if (vertex_shader           == 0 ||
-        fragment_shader         == 0 ||
-        context->shader_program == 0) {
+    if (vertex_shader == 0 || fragment_shader == 0 || context->shader_program == 0)
         return SHADY_OPENGL_ERROR;
-    }
+
+#ifdef DEBUG
+    printf("vs: %d\nfs: %d\nsp: %d\n\n", vertex_shader, fragment_shader, context->shader_program);
+#endif
 
     s_internal_shader_destroy(vertex_shader);
     s_internal_shader_destroy(fragment_shader);
 
-    return SHADY_OPENGL_FINE; /* success */
+    return SHADY_OPENGL_FINE;
+}
+
+int shady_load_folder(const char* path) {
+    DirShaderInfo dir_info = s_internal_dir_file_names(path);
+
+    int status = shady_load(dir_info.vertex_path, dir_info.fragment_path);
+
+    free(dir_info.vertex_path);
+    free(dir_info.fragment_path);
+
+    return status;
 }
 
 void shady_update(void) {
@@ -66,10 +81,14 @@ void shady_update(void) {
     glDrawArrays(GL_QUADS, 0, 4);
 }
 
-void shady_send_uniforms(float w, float h, float mx, float my, float t) {
-    glUniform1f(glGetUniformLocation(context->shader_program, "u_ScreenResolution_x"), w);
-    glUniform1f(glGetUniformLocation(context->shader_program, "u_ScreenResolution_y"), h);
-    glUniform1f(glGetUniformLocation(context->shader_program, "u_Mouse_x"), mx);
-    glUniform1f(glGetUniformLocation(context->shader_program, "u_Mouse_y"), my);
-    glUniform1f(glGetUniformLocation(context->shader_program, "u_Time"), t);
+void shady_send_vec2f(float x, float y, const char* name) {
+    glUniform2fv(glGetUniformLocation(context->shader_program, name), 1, (float[2]){x, y});
+}
+
+void shady_send_int(int i, const char* name) {
+    glUniform1i(glGetUniformLocation(context->shader_program, name), i);
+}
+
+void shady_send_float(float f, const char* name) {
+    glUniform1f(glGetUniformLocation(context->shader_program, name), f);
 }

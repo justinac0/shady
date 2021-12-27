@@ -3,20 +3,35 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <dirent.h>
+
+#include <string.h>
+
 #include <glad.h>
 
 /* ---------- File I/O -------- */
 
-extern char*  s_internal_read_file(const char* file_path);
+#define MAX_PATH_LENGTH 128
 
-/* ---------- OpenGL Abstractions -------- */
+typedef struct {
+    char* vertex_path;
+    char* fragment_path;
+} DirShaderInfo;
 
-extern GLuint s_internal_shader_create(const char* source, GLuint target);
-extern void s_internal_shader_destroy(GLuint shader);
+extern char* s_internal_read_file(const char* file_path);
+extern DirShaderInfo s_internal_dir_file_names(const char* file_path);
 
-extern GLuint s_internal_program_create(GLuint vertex, GLuint fragment);
-extern void s_internal_program_destroy(GLuint program);
+/* ---------- Graphics -------- */
 
-extern GLuint s_internal_surface_create(void);
+typedef struct {
+    GLuint shader_program;
+    GLuint surface;
+} ShadyContext;
+
+extern GLuint   s_internal_shader_create(const char* source, GLuint target);
+extern void     s_internal_shader_destroy(GLuint shader);
+extern GLuint   s_internal_program_create(GLuint vertex, GLuint fragment);
+extern void     s_internal_program_destroy(GLuint program);
+extern GLuint   s_internal_surface_create(void);
 
 #endif

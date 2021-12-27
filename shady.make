@@ -68,6 +68,7 @@ OBJECTS := \
 	$(OBJDIR)/glad.o \
 	$(OBJDIR)/s_context.o \
 	$(OBJDIR)/s_internal_graphics.o \
+	$(OBJDIR)/s_io.o \
 	$(OBJDIR)/s_main.o \
 	$(OBJDIR)/window.o \
 
@@ -135,6 +136,9 @@ $(OBJDIR)/s_context.o: source/s_context.c
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/s_internal_graphics.o: source/s_internal_graphics.c
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/s_io.o: source/s_io.c
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/s_main.o: source/s_main.c
