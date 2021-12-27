@@ -15,7 +15,7 @@ as a tool in learning shader programming.
 - [glad](https://glad.dav1d.de/)
 
 ### Linux
-- Intall [GLFW](glfw.org) development binaries
+- Install [GLFW](glfw.org) development binaries
 - Run `premake5 gmake` in project directory
 - Run `make all` in project directory
 
