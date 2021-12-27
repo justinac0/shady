@@ -1,8 +1,8 @@
 #include "window.h"
 #include "shady.h"
 
-const char* VERTEX_SHADER_PATH      = "examples/fractal/vertex.glsl";
-const char* FRAGMENT_SHADER_PATH    = "examples/fractal/fragment.glsl";
+const char* VERTEX_SHADER_PATH      = "examples/_TEMPLATE_/vertex.glsl";
+const char* FRAGMENT_SHADER_PATH    = "examples/_TEMPLATE_/fragment.glsl";
 
 void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_F5 && action == GLFW_PRESS) {
