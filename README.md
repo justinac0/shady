@@ -25,7 +25,7 @@ as a tool in learning shader programming.
 
 ### Windows
 [building]
-- Run `premake5 vc2019` in project directory
+- Run `premake5 vs2019` in project directory
 - Open `*.sln` file with `Visual Studio (Community/Entiprise)`
 <!-- - Weep -->
 
