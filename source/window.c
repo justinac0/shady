@@ -5,7 +5,7 @@ GLFWwindow* window_create(GLFWkeyfun key_callback) {
         return NULL;
     }
 
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    /* glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); */
     GLFWwindow* window = glfwCreateWindow(640, 480, "shady", NULL, NULL);
     if (!window) {
         return NULL;

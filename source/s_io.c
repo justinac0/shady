@@ -26,6 +26,7 @@ char* s_internal_read_file(const char* file_path) {
     return contents;
 }
 
+#if !defined(_WIN32)
 extern DirShaderInfo s_internal_dir_file_names(const char* file_path) {
     DIR *dir = NULL;
     struct dirent *entry = NULL;
@@ -58,3 +59,4 @@ extern DirShaderInfo s_internal_dir_file_names(const char* file_path) {
 
     return dir_info;
 }
+#endif

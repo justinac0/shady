@@ -15,16 +15,27 @@ as a tool in learning shader programming.
 - [glad](https://glad.dav1d.de/)
 
 ### Linux
+[building]
 - Install [GLFW](glfw.org) development binaries
 - Run `premake5 gmake` in project directory
 - Run `make all` in project directory
 
-### Cleanup
+[cleanup]
 - Run `make clean` in project directory
 
+### Windows
+[building]
+- Run `premake5 vc2019` in project directory
+- Open `*.sln` file with `Visual Studio (Community/Entiprise)`
+<!-- - Weep -->
+
+
 ## Todo
-- Cross-Platform (Windows, Linux)
+- Time Controls
+- Keyboard Input
 - Load shaders by folder
 - Shader management UI
 - Add uniforms at runtime (through UI)
+- Cross-Platform (Windows, Linux)
+- Keyboard Input Uniforms
 - ...

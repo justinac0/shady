@@ -28,21 +28,29 @@ files {
    "source/*.h",
    "source/*.c",
   
-   "source/glad/*.c"
+   "thirdparty/glad/*.c"
 }
+
+includedirs("thirdparty/glad/")
 
 --------------------------------------------------------------------------------
 -- Setup Dependences --
 -----------------------
 
-function link_glfw()
+if os.target() == "windows" then
+   local GLFW_INCLUDES = "thirdparty/glfw-3.3.6.bin-WIN64/include"
+   local GLFW_LIBS     = "thirdparty/glfw-3.3.6.bin-WIN64/lib-vc2019"
+
+   includedirs(GLFW_INCLUDES)
+
+   libdirs { GLFW_LIBS }
+
+   filter "kind:not StaticLib"
+   links { "opengl32", "glfw", 'gdi32', "winmm" }
+else
    filter "kind:not StaticLib"
    links { "glfw", 'dl' }
 end
-
-includedirs("source/glad/")
-
-link_glfw()
 
 --------------------------------------------------------------------------------
 -- Build Configurations --

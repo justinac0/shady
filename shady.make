@@ -16,7 +16,7 @@ ifeq ($(config),development)
   TARGET = $(TARGETDIR)/shady
   OBJDIR = objects/development
   DEFINES += -DDEBUG
-  INCLUDES += -Isource/glad
+  INCLUDES += -Ithirdparty/glad
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -Og -g -std=c89
@@ -43,7 +43,7 @@ ifeq ($(config),production)
   TARGET = $(TARGETDIR)/shady
   OBJDIR = objects/production
   DEFINES += -DNDEBUG
-  INCLUDES += -Isource/glad
+  INCLUDES += -Ithirdparty/glad
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O3 -g -std=c89
@@ -65,12 +65,12 @@ all: prebuild prelink $(TARGET)
 endif
 
 OBJECTS := \
-	$(OBJDIR)/glad.o \
 	$(OBJDIR)/s_context.o \
 	$(OBJDIR)/s_internal_graphics.o \
 	$(OBJDIR)/s_io.o \
 	$(OBJDIR)/s_main.o \
 	$(OBJDIR)/window.o \
+	$(OBJDIR)/glad.o \
 
 RESOURCES := \
 
@@ -129,9 +129,6 @@ else
 $(OBJECTS): | $(OBJDIR)
 endif
 
-$(OBJDIR)/glad.o: source/glad/glad.c
-	@echo $(notdir $<)
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/s_context.o: source/s_context.c
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
@@ -145,6 +142,9 @@ $(OBJDIR)/s_main.o: source/s_main.c
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/window.o: source/window.c
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/glad.o: thirdparty/glad/glad.c
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 

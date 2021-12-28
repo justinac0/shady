@@ -3,7 +3,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <dirent.h>
 
 #include <string.h>
 
@@ -13,13 +12,20 @@
 
 #define MAX_PATH_LENGTH 128
 
+
+extern char* s_internal_read_file(const char* file_path);
+
+#if !defined(_WIN32)
+#include <dirent.h>
+
 typedef struct {
     char* vertex_path;
     char* fragment_path;
 } DirShaderInfo;
 
-extern char* s_internal_read_file(const char* file_path);
 extern DirShaderInfo s_internal_dir_file_names(const char* file_path);
+
+#endif
 
 /* ---------- Graphics -------- */
 
