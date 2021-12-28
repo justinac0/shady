@@ -27,8 +27,10 @@ extern void shady_terminate(void);
 /**/
 extern int  shady_load(const char* vertex_path, const char* fragment);
 
+#if !defined(_WIN32)
 /**/
 extern int  shady_load_folder(const char* path);
+#endif
 
 /**/
 extern void shady_update(void);

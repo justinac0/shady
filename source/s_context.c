@@ -60,6 +60,7 @@ int shady_load(const char* vertex_path, const char* fragment_path) {
     return SHADY_OPENGL_FINE;
 }
 
+#if !defined(_WIN32)
 int shady_load_folder(const char* path) {
     DirShaderInfo dir_info = s_internal_dir_file_names(path);
 
@@ -70,6 +71,7 @@ int shady_load_folder(const char* path) {
 
     return status;
 }
+#endif
 
 void shady_update(void) {
     /* enable shader program */
