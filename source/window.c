@@ -13,7 +13,6 @@ GLFWwindow* window_create(GLFWkeyfun key_callback) {
     /* glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); */
     GLFWwindow* window = glfwCreateWindow(640, 480, "shady", NULL, NULL);
     if (!window) {
-        printf("aaaaaaaaaaaaaa");
         return NULL;
     }
 
@@ -21,10 +20,6 @@ GLFWwindow* window_create(GLFWkeyfun key_callback) {
 
     glfwMakeContextCurrent(window);
     gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
-
-    if (GLAD_GL_VERSION_3_3) {
-        printf("aaaaaaa\n");
-    }
 
     glfwSwapInterval(1);
 
