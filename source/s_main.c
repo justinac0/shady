@@ -21,8 +21,8 @@ int main(int argc, char const *argv[]) {
 
 #if !defined(_WIN32)
     shady_load_folder(CURRENT_FOLDER);
-    shady_load(CURRENT_FOLDER"vertex.glsl", CURRENT_FOLDER"fragment.glsl");
 #else
+    shady_load(CURRENT_FOLDER"vertex.glsl", CURRENT_FOLDER"fragment.glsl");
 #endif
 
     while (!window_should_close(window)) {
