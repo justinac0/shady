@@ -4,6 +4,10 @@
 
 Shady is a simple glsl writing environment created for rapid shader development.
 
+I am a big fan of [ShaderToy](https://www.shadertoy.com/) and the  impressive shaders that people have made there. I quite like graphics programming
+and created Shady to learn more in-depth how tools like
+ShaderToy work.
+
 ## Functionality
 
 |Feature|Key|
