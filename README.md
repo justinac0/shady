@@ -1,6 +1,8 @@
+
 # Shady
-Shady is a simple glsl writing environment created for rapid shader development. I created Shady for educational reasons (graphics programming is cool) and use it
-as a tool in learning shader programming.
+![3 raytraceced spheres, left dialetric, middle normal, right metal](images/rtweekend_1.png)
+
+Shady is a simple glsl writing environment created for rapid shader development.
 
 ## Functionality
 
