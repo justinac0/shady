@@ -38,15 +38,18 @@ includedirs("thirdparty/glad/")
 -----------------------
 
 if os.target() == "windows" then
-   local GLFW_INCLUDES = "thirdparty/glfw-3.3.6.bin-WIN64/include"
-   local GLFW_LIBS     = "thirdparty/glfw-3.3.6.bin-WIN64/lib-vc2019"
+   -- ignore msvc defaults
+   ignoredefaultlibraries { "MSVCRT" }
+
+   local GLFW_INCLUDES = "thirdparty/glfw-3.3.6.bin.WIN64/include"
+   local GLFW_LIBS     = "thirdparty/glfw-3.3.6.bin.WIN64/lib-vc2019"
 
    includedirs(GLFW_INCLUDES)
 
    libdirs { GLFW_LIBS }
 
    filter "kind:not StaticLib"
-   links { "opengl32", "glfw", 'gdi32', "winmm" }
+   links { "opengl32", "glfw3", 'gdi32', "winmm" }
 else
    filter "kind:not StaticLib"
    links { "glfw", 'dl' }

@@ -1,11 +1,11 @@
 #include "window.h"
 #include "shady.h"
 
-const char* CURRENT_FOLDER = "examples/rtweekend_1/";
+#define CURRENT_FOLDER "examples/rtweekend_1/"
 
 void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_F5 && action == GLFW_PRESS) {
-        int loaded = shady_load_folder(CURRENT_FOLDER);
+        int loaded = shady_load(CURRENT_FOLDER"vertex.glsl", CURRENT_FOLDER"fragment.glsl");
 
         if (loaded == SHADY_OPENGL_FINE)
             printf("[Shady] : live-reload complete...\n");
@@ -19,7 +19,11 @@ int main(int argc, char const *argv[]) {
 
     shady_init();
 
+#if !defined(_WIN32)
     shady_load_folder(CURRENT_FOLDER);
+    shady_load(CURRENT_FOLDER"vertex.glsl", CURRENT_FOLDER"fragment.glsl");
+#else
+#endif
 
     while (!window_should_close(window)) {
         int width, height;
