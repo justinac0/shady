@@ -10,10 +10,10 @@ GLuint s_internal_shader_create(const char* source, GLuint target) {
 	int compile_status = 0;
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &compile_status);
 	if (compile_status == GL_FALSE) {
-		uint32_t length = 0;
+		unsigned int length = 0;
 		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length);
 
-		int8_t* log = (char*) calloc(length, sizeof(int8_t));
+		char* log = (char*) calloc(length, sizeof(char));
 
 		glGetShaderInfoLog(shader, length, &length, &log[0]);
 		glDeleteShader(shader);
@@ -38,13 +38,13 @@ GLuint s_internal_program_create(GLuint vertex, GLuint fragment) {
 
     glLinkProgram(program);
 
-    int32_t link_status = 0;
+    int link_status = 0;
     glGetProgramiv(program, GL_LINK_STATUS, &link_status);
     if (link_status == GL_FALSE) {
-        uint32_t length = 0;
+        unsigned int length = 0;
         glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
 
-        int8_t* log = (char*) calloc(length, sizeof(int8_t));
+        char* log = (char*) calloc(length, sizeof(char));
         glGetProgramInfoLog(program, length, &length, &log[0]);
 
         glDeleteProgram(program);
@@ -77,6 +77,7 @@ GLuint s_internal_surface_create(void) {
 	glBindBuffer(GL_ARRAY_BUFFER, buffer);
 	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(float), quad, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    glEnableVertexAttribArray(0);
 
     return buffer; 
 }

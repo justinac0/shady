@@ -5,9 +5,15 @@ GLFWwindow* window_create(GLFWkeyfun key_callback) {
         return NULL;
     }
 
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+
+
     /* glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); */
     GLFWwindow* window = glfwCreateWindow(640, 480, "shady", NULL, NULL);
     if (!window) {
+        printf("aaaaaaaaaaaaaa");
         return NULL;
     }
 
@@ -16,9 +22,11 @@ GLFWwindow* window_create(GLFWkeyfun key_callback) {
     glfwMakeContextCurrent(window);
     gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
 
-    glfwSwapInterval(1);
+    if (GLAD_GL_VERSION_3_3) {
+        printf("aaaaaaa\n");
+    }
 
-    glViewport(0, 0, 640, 480);
+    glfwSwapInterval(1);
 
     return window;
 }
