@@ -58,3 +58,14 @@ shady
 shady.make
 
 .vscode
+.vs
+
+# Ignore all Visual Studio Files
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.vcxproj.user.filters
+*.sln.user
+*.sln.user.filters
+*.suo
