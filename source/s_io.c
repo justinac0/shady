@@ -15,7 +15,7 @@ char* s_internal_read_file(const char* file_path) {
     rewind(f);
 
     /* Allocate space for file contents */
-    char* contents = (char*) calloc(length, sizeof (char));
+    char* contents = (char*) calloc(length + 1, sizeof (char));
     if (contents == NULL) return NULL;
 
     /* Read file to 'contents' */
