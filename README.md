@@ -1,6 +1,6 @@
 
 # Shady
-![3 raytraceced spheres, left dialetric, middle normal, right metal](images/rtweekend_1.png)
+![3 raytraceced spheres, left dialetric, middle normal, right metal](images/rtweekend_1.gif)
 
 Shady is a simple glsl writing environment created for rapid shader development.
 
