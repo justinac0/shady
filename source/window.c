@@ -10,8 +10,8 @@ GLFWwindow* window_create(GLFWkeyfun key_callback) {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
 
-    /* glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); */
-    GLFWwindow* window = glfwCreateWindow(640, 480, "shady", NULL, NULL);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    GLFWwindow* window = glfwCreateWindow(1280, 720, "shady", NULL, NULL);
     if (!window) {
         return NULL;
     }

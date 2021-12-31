@@ -15,8 +15,8 @@ out vec4 FragColor;
 #define DBL_MAX 1.7976931348623158e+308
 #define DBL_MIN 2.2250738585072014e-308
 
-#define SAMPLES_PER_PIXEL 5
-#define MAX_SCENE_SIZE 5
+#define SAMPLES_PER_PIXEL 10
+#define MAX_SCENE_SIZE 6
 #define MAX_DEPTH 10
 
 #define PI 3.14159265359
@@ -321,7 +321,7 @@ vec3 ray_color_no_material(Ray ray) {
 void setup(vec2 fragCoord) {
     set_seed(fragCoord/ScreenResolution.xy * Time); // Add time for frame to frame randomness
 
-    vec3 look_from = vec3(3.0, 3.0, 2.0);
+    vec3 look_from = vec3(3.0, 10.0, sin(Time) + 2.0);
     vec3 look_at = vec3(0.0, 0.0, -1.0);
     vec3 vup = vec3(0.0, 1.0, 0.0);
     float aspect = ScreenResolution.x / ScreenResolution.y;
@@ -329,25 +329,41 @@ void setup(vec2 fragCoord) {
     float aperture = 2.0;
     camera = camera_new(look_from, look_at, vup, 20.0, aspect, dist_to_focus, aperture);
        
-    Material mat_ground = Lambertian_Material(vec3(0.8, 0.8, 0.0));
-    Material mat_center = Lambertian_Material(vec3(0.1, 0.2, 0.5));
-    Material mat_left   = Dielectric_Material(1.5);
-    Material mat_right  = Metal_Material(vec3(0.8, 0.6, 0.4), 0.0);
-    
-    Sphere ground = Sphere(vec3( 0.0, -100.5, -1.0), 100.0, mat_ground);
-    Sphere center = Sphere(vec3( 0.0,    0.0, -1.0),   0.5, mat_center);
-    Sphere left   = Sphere(vec3(-1.0,    0.0, -1.0),   0.5, mat_left);
-    Sphere left2  = Sphere(vec3(-1.0,    0.0, -1.0), -0.45, mat_left);
-    Sphere right  = Sphere(vec3( 1.0,    0.0, -1.0),   0.5, mat_right);
-    
+    // Materials  
+    Material m_lam_white  = Lambertian_Material(vec3(.8));
+    Material m_lam_yellow = Lambertian_Material(vec3(1, .8, .36));
+    Material m_lam_red    = Lambertian_Material(vec3(1, .43, .41));
+    Material m_dialetric  = Dielectric_Material(1.5);
+    Material m_metal      = Metal_Material(vec3(.8), 0.0);
+
+    // Some offsets
+    vec3 left   = vec3(-1, 0, 0);
+    vec3 right  = vec3(1, 0, 0);
+    vec3 bottom = vec3(0, 0, -1);
+
+    // Scene Spheres
+    Sphere ground       = Sphere(vec3(0.0, -100.5, 0.0) + bottom, 100.0, m_lam_white);
+    Sphere lambertian_1 = Sphere(vec3(0.0) + bottom,               0.5, m_lam_yellow);
+    Sphere lambertian_2 = Sphere(vec3(0.0) + bottom + left,        0.5,  m_lam_red);
+    Sphere metal        = Sphere(vec3(0.0) + bottom + right,       0.5,  m_metal);
+    Sphere dialetric_1  = Sphere(vec3(0.0) + bottom,               0.5,  m_dialetric);
+    Sphere dialetric_2  = Sphere(vec3(0.0) + bottom,               0.48, m_dialetric);
+
+    // Add spheres to scene
     world_add(ground);
-    world_add(center);
-    world_add(left);
-    world_add(left2);
-    world_add(right);
+    world_add(lambertian_1);
+    world_add(lambertian_2);
+    world_add(metal);
+    world_add(dialetric_1);
+    world_add(dialetric_2);
 }
 
 void main() {
+    // move center sphere
+    world.scene[1].center.z = sin(Time)*2 - 1;
+    world.scene[1].center.x = cos(Time)*2;
+    // world.scene[1].radius = abs(sin(Time))*.5+.2;
+
     setup(gl_FragCoord.xy);
     vec2 uv = gl_FragCoord.xy/ScreenResolution.xy;
 
