@@ -1,7 +1,5 @@
 
 # Shady
-![3 raytraceced spheres, left dialetric, middle normal, right metal](images/rtweekend_1.gif)
-
 Shady is a simple glsl writing environment created for rapid shader development.
 
 I am a big fan of [ShaderToy](https://www.shadertoy.com/) and the  impressive shaders that people have made there. I quite like graphics programming
@@ -45,3 +43,8 @@ ShaderToy work.
 - Cross-Platform (Windows, Linux)
 - Keyboard Input Uniforms
 - ...
+
+## Showcase
+> ![3 raytraceced spheres, left dialetric, middle normal, right metal](images/rtweekend_1.gif)
+> 
+> captured from examples/rtweekened_1
