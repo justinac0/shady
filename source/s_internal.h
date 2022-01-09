@@ -6,7 +6,7 @@
 
 #include <string.h>
 
-#include <glad.h>
+#include <glad/glad.h>
 
 /* ---------- File I/O -------- */
 

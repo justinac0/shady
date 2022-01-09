@@ -50,10 +50,6 @@ int shady_load(const char* vertex_path, const char* fragment_path) {
     if (vertex_shader == 0 || fragment_shader == 0 || context->shader_program == 0)
         return SHADY_OPENGL_ERROR;
 
-#ifdef DEBUG
-    printf("vs: %d\nfs: %d\nsp: %d\n\n", vertex_shader, fragment_shader, context->shader_program);
-#endif
-
     s_internal_shader_destroy(vertex_shader);
     s_internal_shader_destroy(fragment_shader);
 

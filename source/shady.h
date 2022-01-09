@@ -8,7 +8,7 @@
 #include <stdbool.h>
 
 /* OpenGL Extension Loading */
-#include <glad.h>
+#include <glad/glad.h>
 
 /* ---------- Error Defines -------- */
 #define SHADY_INIT_FAILURE 0

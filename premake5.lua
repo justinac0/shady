@@ -28,10 +28,10 @@ files {
    "source/*.h",
    "source/*.c",
   
-   "thirdparty/glad/*.c"
+   "thirdparty/glad/src/*.c"
 }
 
-includedirs("thirdparty/glad/")
+includedirs("thirdparty/glad/include/")
 
 --------------------------------------------------------------------------------
 -- Setup Dependences --

@@ -15,7 +15,7 @@ out vec4 FragColor;
 #define DBL_MAX 1.7976931348623158e+308
 #define DBL_MIN 2.2250738585072014e-308
 
-#define SAMPLES_PER_PIXEL 10
+#define SAMPLES_PER_PIXEL 5
 #define MAX_SCENE_SIZE 6
 #define MAX_DEPTH 10
 
@@ -347,7 +347,6 @@ void setup(vec2 fragCoord) {
     Sphere lambertian_2 = Sphere(vec3(0.0) + bottom + left,        0.5,  m_lam_red);
     Sphere metal        = Sphere(vec3(0.0) + bottom + right,       0.5,  m_metal);
     Sphere dialetric_1  = Sphere(vec3(0.0) + bottom,               0.5,  m_dialetric);
-    Sphere dialetric_2  = Sphere(vec3(0.0) + bottom,               0.48, m_dialetric);
 
     // Add spheres to scene
     world_add(ground);
@@ -355,7 +354,6 @@ void setup(vec2 fragCoord) {
     world_add(lambertian_2);
     world_add(metal);
     world_add(dialetric_1);
-    world_add(dialetric_2);
 }
 
 void main() {

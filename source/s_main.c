@@ -3,6 +3,7 @@
 
 #define CURRENT_FOLDER "examples/rtweekend_1/"
 
+/* ---------- GLFW CALLBACKS -------- */
 void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_F5 && action == GLFW_PRESS) {
         int loaded = shady_load(CURRENT_FOLDER"vertex.glsl", CURRENT_FOLDER"fragment.glsl");
@@ -12,18 +13,28 @@ void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, in
         else
             printf("[Shady] : live-reload failed...\n");
     }
+
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
+    }
 }
 
+/* ---------- Main -------- */
 int main(int argc, char const *argv[]) {
     GLFWwindow* window = window_create(glfw_key_callback);
 
     shady_init();
 
-#if !defined(_WIN32)
-    shady_load_folder(CURRENT_FOLDER);
-#else
-    shady_load(CURRENT_FOLDER"vertex.glsl", CURRENT_FOLDER"fragment.glsl");
-#endif
+    if (argc == 2) {
+        #if defined(_WIN32)
+            shady_load(argv[1]"vertex.glsl", argv[1]"fragment.glsl");
+        #else
+            shady_load_folder(argv[1]);
+        #endif
+    } else {
+        printf("Expected usage: shady [arg1]\nWhere 'arg1' is the shader folder path.\n");
+        exit(EXIT_FAILURE);
+    }
 
     while (!window_should_close(window)) {
         int width, height;
@@ -32,7 +43,6 @@ int main(int argc, char const *argv[]) {
 
         double mx, my;
         glfwGetCursorPos(window, &mx, &my);
-
         shady_send_vec2f(width, height, "u_ScreenResolution");
         shady_send_vec2f(mx, my, "u_Mouse");
         shady_send_float(glfwGetTime(), "u_Time");
