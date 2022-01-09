@@ -15,7 +15,7 @@ configurations {
 project  "shady"
 kind     "ConsoleApp"
 language "C"
-cdialect "C89"
+cdialect "C99"
 
 architecture "x86_64"
 
@@ -28,10 +28,13 @@ files {
    "source/*.h",
    "source/*.c",
   
-   "thirdparty/glad/src/*.c"
+   "thirdparty/glad/src/*.c",
+   "thirdparty/glfw/src/*.h",
+   "thirdparty/glfw/src/*.c",
 }
 
 includedirs("thirdparty/glad/include/")
+includedirs("thirdparty/glfw/include")
 
 --------------------------------------------------------------------------------
 -- Setup Dependences --
@@ -41,17 +44,8 @@ if os.target() == "windows" then
    -- ignore msvc defaults
    ignoredefaultlibraries { "MSVCRT" }
 
-   local GLFW_INCLUDES = "thirdparty/glfw-3.3.6.bin.WIN64/include"
-   local GLFW_LIBS     = "thirdparty/glfw-3.3.6.bin.WIN64/lib-vc2019"
-
-   includedirs(GLFW_INCLUDES)
-
-   libdirs { GLFW_LIBS }
-
-   filter "kind:not StaticLib"
    links { "opengl32", "glfw3", 'gdi32', "winmm" }
 else
-   filter "kind:not StaticLib"
    links { "glfw", 'dl' }
 end
 
