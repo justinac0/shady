@@ -8,6 +8,8 @@ ShaderToy work.
 
 ## Functionality
 
+run `./build/[development/production]/shady ./examples/[shader_folder]`
+
 |Feature|Key|
 |-|-|
 |Live reloading shaders| F5 |
