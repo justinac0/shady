@@ -9,6 +9,19 @@ configurations {
    "production"
 }
 
+flags { "MultiProcessorCompile" }
+
+filter   "configurations:development"
+   defines  "DEBUG"
+   symbols  "On"
+   optimize "Debug"
+
+filter   "configurations:production"
+   defines  "NDEBUG"
+   symbols  "On"
+   optimize "Speed"
+   flags { "LinkTimeOptimization" }
+
 --------------------------------------------------------------------------------
 -- Project Configuration --
 ---------------------------
@@ -22,45 +35,29 @@ architecture "x86_64"
 objdir "objects"
 
 targetname "shady"
-targetdir  "./"-- "build\\%{cfg.buildcfg}"
+targetdir  "build/%{cfg.buildcfg}"
 
 files {
    "source/*.h",
    "source/*.c",
   
-   "thirdparty/glad/src/*.c",
-   "thirdparty/glfw/src/*.h",
-   "thirdparty/glfw/src/*.c",
+   "thirdparty/glad/src/*.c"
 }
 
-includedirs("thirdparty/glad/include/")
-includedirs("thirdparty/glfw/include")
+includedirs{"thirdparty/", "thirdparty/glad/include/", "thirdparty/glfw/include"}
 
 --------------------------------------------------------------------------------
 -- Setup Dependences --
 -----------------------
 
-if os.target() == "windows" then
-   -- ignore msvc defaults
+links { "GLFW" }
+filter "system:linux"
+   links { "dl", "pthread", "m", "X11" }
+
+   defines { "_X11"}
+
+filter "system:windows"
    ignoredefaultlibraries { "MSVCRT" }
+   defines { "_WINDOWS"}
 
-   links { "opengl32", "glfw3", 'gdi32', "winmm" }
-else
-   links { "glfw", 'dl' }
-end
-
---------------------------------------------------------------------------------
--- Build Configurations --
---------------------------
-
-filter   "configurations:development"
-defines  "DEBUG"
-symbols  "On"
-optimize "Debug"
-
-filter   "configurations:production"
-defines  "NDEBUG"
-symbols  "On"
-optimize "Speed"
-
---------------------------------------------------------------------------------
+include "thirdparty/glfw.lua"

@@ -55,7 +55,7 @@ objects/
 Makefile
 premake5
 shady
-shady.make
+*.make
 
 .vscode
 .vs
