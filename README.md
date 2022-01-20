@@ -12,7 +12,8 @@ run `./build/[development/production]/shady ./examples/[shader_folder]`
 
 |Feature|Key|
 |-|-|
-|Live reloading shaders| F5 |
+|Live reloading shaders| F5       |
+|Freeze Time (Pausing) | Spacebar |
 
 ## Compiling
 ### Dependencies
