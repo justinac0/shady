@@ -3,6 +3,8 @@
 
 #define CURRENT_FOLDER "examples/rtweekend_1/"
 
+bool isPaused = false;
+
 /* ---------- GLFW CALLBACKS -------- */
 void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_F5 && action == GLFW_PRESS) {
@@ -16,6 +18,10 @@ void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, in
 
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
+    }
+
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+        isPaused = !isPaused;
     }
 }
 
@@ -36,16 +42,30 @@ int main(int argc, char const *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    while (!window_should_close(window)) {
-        int width, height;
-        glfwGetWindowSize(window, &width, &height);
-        glViewport(0, 0, width, height);
+    double realTime = 0;
 
-        double mx, my;
-        glfwGetCursorPos(window, &mx, &my);
-        shady_send_vec2f(width, height, "u_ScreenResolution");
-        shady_send_vec2f(mx, my, "u_Mouse");
-        shady_send_float(glfwGetTime(), "u_Time");
+    double lastTime = glfwGetTime();
+    while (!window_should_close(window)) {
+        double currentTime = glfwGetTime();
+
+        if (!isPaused) {
+            realTime += currentTime - lastTime;
+
+            int width, height;
+            glfwGetWindowSize(window, &width, &height);
+            glViewport(0, 0, width, height);
+
+            double mx, my;
+            glfwGetCursorPos(window, &mx, &my);
+            shady_send_vec2f(width, height, "u_ScreenResolution");
+            shady_send_vec2f(mx, my, "u_Mouse");
+
+            shady_send_float(realTime, "u_Time");
+        }
+
+        if (currentTime - lastTime > 1.0/120.0) {
+            lastTime = currentTime;
+        }
 
         shady_update();
 
