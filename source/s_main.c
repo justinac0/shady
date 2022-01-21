@@ -3,7 +3,10 @@
 
 #define CURRENT_FOLDER "examples/rtweekend_1/"
 
+/* FIXME: move these globals into the shady state */
 bool isPaused = false;
+double realTime = 0;
+double currentDelta = 0;
 
 /* ---------- GLFW CALLBACKS -------- */
 void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -22,6 +25,16 @@ void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, in
 
     if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
         isPaused = !isPaused;
+    }
+
+    if (isPaused) {
+        if (key == GLFW_KEY_A && action == GLFW_REPEAT) {
+            realTime += currentDelta;
+        }
+
+        if (key == GLFW_KEY_D && action == GLFW_REPEAT) {
+            realTime -= currentDelta;
+        }
     }
 }
 
@@ -42,25 +55,26 @@ int main(int argc, char const *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    double realTime = 0;
 
     double lastTime = glfwGetTime();
     while (!window_should_close(window)) {
         double currentTime = glfwGetTime();
+        currentDelta = currentTime - lastTime;
+
+        int width, height;
+        double mx, my;
+
+        glfwGetWindowSize(window, &width, &height);
+        glViewport(0, 0, width, height);
+
+        glfwGetCursorPos(window, &mx, &my);
+        shady_send_vec2f(width, height, "u_ScreenResolution");
+        shady_send_vec2f(mx, my, "u_Mouse");
+
+        shady_send_float(realTime, "u_Time");
 
         if (!isPaused) {
-            realTime += currentTime - lastTime;
-
-            int width, height;
-            glfwGetWindowSize(window, &width, &height);
-            glViewport(0, 0, width, height);
-
-            double mx, my;
-            glfwGetCursorPos(window, &mx, &my);
-            shady_send_vec2f(width, height, "u_ScreenResolution");
-            shady_send_vec2f(mx, my, "u_Mouse");
-
-            shady_send_float(realTime, "u_Time");
+            realTime += currentDelta;
         }
 
         if (currentTime - lastTime > 1.0/120.0) {
