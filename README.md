@@ -14,6 +14,9 @@ run `./build/[development/production]/shady ./examples/[shader_folder]`
 |-|-|
 |Live reloading shaders| F5       |
 |Freeze Time (Pausing) | Spacebar |
+|<b>(Only while Paused)</b>||
+|Move time forward| D|
+|Move time backwards| A|
 
 ## Compiling
 ### Dependencies
