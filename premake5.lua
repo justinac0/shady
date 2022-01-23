@@ -59,5 +59,6 @@ filter "system:linux"
 filter "system:windows"
    ignoredefaultlibraries { "MSVCRT" }
    defines { "_WINDOWS"}
+   links { "opengl32", "gdi32", "GLFW" }
 
 include "thirdparty/glfw.lua"

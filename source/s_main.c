@@ -46,7 +46,7 @@ int main(int argc, char const *argv[]) {
 
     if (argc == 2) {
         #if defined(_WIN32)
-            shady_load(argv[1]"vertex.glsl", argv[1]"fragment.glsl");
+            shady_load("examples/rtweekend_1/vertex.glsl", "examples/rtweekend_1/fragment.glsl");
         #else
             shady_load_folder(argv[1]);
         #endif
