@@ -89,10 +89,10 @@ float fmin(float f1, float f2) { return f1 <= f2 ? f1 : f2; }
 float fmax(float f1, float f2) { return f1 >= f2 ? f1 : f2; }
 
 bool near_zero(vec3 v) {
-    const float s = 1e-8;
+    float s = 1e-8;
     return abs(v.x) < s && abs(v.y) < s && abs(v.z) < s;
 }
-vec3 reflect(vec3 v, const vec3 normal) {
+vec3 reflect(vec3 v, vec3 normal) {
     return v - 2.0 * dot(v, normal) * normal;
 }
 vec3 refract(vec3 v, vec3 normal, float ratio) {

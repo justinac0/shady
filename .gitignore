@@ -70,3 +70,5 @@ build
 *.sln.user
 *.sln.user.filters
 *.suo
+
+*.stackdump

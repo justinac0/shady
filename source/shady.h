@@ -1,48 +1,55 @@
 #ifndef SHADY_H
 #define SHADY_H
 
-/* Standard Library Includes */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-/* OpenGL Extension Loading */
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
-/* ---------- Error Defines -------- */
-#define SHADY_INIT_FAILURE 0
-#define SHADY_INIT_SUCCESS 1
-#define SHADY_OPENGL_FINE  2
-#define SHADY_OPENGL_ERROR 3
 
-/* ---------- Shady Handling -------- */
-
-/**/
-extern int  shady_init(void);
-
-/**/
-extern void shady_terminate(void);
-
-/**/
-extern int  shady_load(const char* vertex_path, const char* fragment);
-
-#if !defined(_WIN32)
-/**/
-extern int  shady_load_folder(const char* path);
+#ifdef SHADY_INCLUDE_ALL
+#define SHADY_CORE
+#define SHADY_UI
 #endif
 
-/**/
-extern void shady_update(void);
 
-/**/
-extern void shady_send_vec2f(float x, float y, const char* name);
-
-/**/
-extern void shady_send_int(int i, const char* name);
-
-/**/
-extern void shady_send_float(float f, const char* name);
+typedef struct ShadyInfo {
+    GLuint programID;
+    GLuint vertexShader;
+    GLuint fragmentShader;
+    GLuint surface;
+} ShadyInfo;
 
 
-#endif
+/* ------ Init -------- */
+bool shady_init(int width, int height);
+void shady_terminate(void);
+bool shady_is_open(void);
+void shady_update(void);
+
+
+/* ------ Shady Core -------- */
+#ifdef SHADY_CORE
+
+void shady_uniform_defaults(void);
+void shady_load_default(void);
+void shady_load(const char *vertexShader, const char *fragmentShader);
+void shady_load_folder(const char *folder);
+void shady_draw(void);
+
+#endif // SHADY_CORE
+
+
+/* ------ Shady UI -------- */
+#ifdef SHADY_UI
+
+void shady_ui_text(const char *text, int x, int y);
+
+#endif // SHADY_UI
+
+
+#endif // SHADY_H
