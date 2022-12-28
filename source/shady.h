@@ -35,7 +35,6 @@ void shady_update(void);
 /* ------ Shady Core -------- */
 #ifdef SHADY_CORE
 
-void shady_uniform_defaults(void);
 void shady_load_default(void);
 void shady_load(const char *vertexShader, const char *fragmentShader);
 void shady_load_folder(const char *folder);
@@ -47,6 +46,10 @@ void shady_draw(void);
 /* ------ Shady UI -------- */
 #ifdef SHADY_UI
 
+void shady_ui_init(const char* fontPath);
+void shady_ui_terminate(void);
+
+void shady_ui_char(const char c, int x, int y);
 void shady_ui_text(const char *text, int x, int y);
 
 #endif // SHADY_UI

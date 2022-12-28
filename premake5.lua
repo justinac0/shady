@@ -44,7 +44,7 @@ files {
    "thirdparty/glad/src/*.c"
 }
 
-includedirs{"thirdparty/", "thirdparty/glad/include/", "thirdparty/glfw/include"}
+includedirs{"thirdparty/", "thirdparty/glad/include/", "thirdparty/glfw/include", "thirdparty/stb"}
 
 --------------------------------------------------------------------------------
 -- Setup Dependences --

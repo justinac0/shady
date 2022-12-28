@@ -2,10 +2,9 @@
 
 #include <string.h>
 
-/* ------ Graphics ---------------------------------------------------------- */
+GLuint create_quad(int x, int y, float w, float h);
 
-GLFWwindow* window = NULL;
-ShadyInfo shadyInfo;
+/* ------ Graphics ---------------------------------------------------------- */
 
 
 char* read_file(const char* path) {
@@ -52,6 +51,33 @@ GLuint create_shader(const char* shaderPath, GLenum type) {
     return shader;
 }
 
+GLuint create_shader_from_source(const char* source, GLenum type) {
+    GLuint shader = glCreateShader(type);
+    const GLint length = strlen(source);
+
+    glShaderSource(shader, 1, (const char* const*)&source, &length);
+    glCompileShader(shader);
+
+    GLint success = 0;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+
+    if (success == 0) {
+        GLint length = 0;
+        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length);
+
+        GLchar* log = (GLchar*)calloc(length + 1, sizeof(GLchar));
+        glGetShaderInfoLog(shader, length, &length, &log[0]);
+
+        printf("[shader] -- %s\n", log);
+        free(log);
+
+        glDeleteShader(shader);
+    }
+
+    return shader;
+}
+
+
 
 GLuint create_shader_program(GLuint vertexShader, GLuint fragmentShader) {
     GLuint programID = glCreateProgram();
@@ -68,7 +94,7 @@ GLuint create_shader_program(GLuint vertexShader, GLuint fragmentShader) {
         GLint length = 0;
         glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &length);
 
-        GLchar* log = (GLchar*)calloc(length + 1, sizeof(GLchar));
+        GLchar* log = (GLchar*) calloc(length + 1, sizeof(GLchar));
         glGetProgramInfoLog(programID, length, &length, &log[0]);
 
         printf("[shader_program] -- %s\n", log);
@@ -86,36 +112,71 @@ GLuint create_shader_program(GLuint vertexShader, GLuint fragmentShader) {
 }
 
 
-GLint create_surface() {
+GLuint create_quad(int x, int y, float w, float h) {
     float quad[] = {
-		-1, 1,
-		 1, 1,
-		 1,-1,
-		-1,-1
+		-w, h, // tl
+		 w, h, // tr
+		 w,-h, // br
+		-w,-h  // bl
 	};
 
-	GLuint buffer;
+    int ints[] = {
+        0, 1, 2,
+        0, 2, 3
+    };
+
+    GLuint vao;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+    GLuint ido;
+	glGenBuffers(1, &ido);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ido);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ints), ints, GL_STATIC_DRAW);
+
+    GLuint buffer;
 	glGenBuffers(1, &buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, buffer);
-	glBufferData(GL_ARRAY_BUFFER, 8*sizeof(float), quad, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quad), quad, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
     glEnableVertexAttribArray(0);
 
-    return buffer;
+    glBindVertexArray(0);
+
+    return vao;
 }
 
 
 /* -------------------------------------------------------------------------- */
 
+int i = 0; // temp
+int j = 0; // temp
+bool polys = true; // temp
 
 static void glfw_key_callback(GLFWwindow* pWindow, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(pWindow, true);
     }
+
+    if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
+        i = (++i % 16);
+    }
+    
+    if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
+        j = (++j % 16);
+    }
+
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+        polys = !polys;
+    }
 }
 
 
 /* ------ Init -------------------------------------------------------------- */
+
+
+GLFWwindow* window = NULL;
+ShadyInfo shadyInfo;
 
 
 bool shady_init(int width, int height) {
@@ -153,40 +214,30 @@ bool shady_is_open(void) {
 
 void shady_update(void) {
     glfwPollEvents();
-    glfwSwapBuffers(window);
+    polys ? glPolygonMode(GL_FRONT_AND_BACK, GL_FILL) : glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 
 void shady_draw(void) {
     glUseProgram(shadyInfo.programID);
 
-    glBindBuffer(GL_ARRAY_BUFFER, shadyInfo.surface);
+    glBindVertexArray(shadyInfo.surface);
     glEnableVertexAttribArray(0);
-    glDrawArrays(GL_QUADS, 0, 4);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
+    glBindVertexArray(0);
+    glUseProgram(0);
 }
 
 
 /* ------ Core -------------------------------------------------------------- */
-
-void shady_uniform_defaults(void) {
-    int width, height;
-    glfwGetWindowSize(window, &width, &height);
-    glUniform2fv(glGetUniformLocation(shadyInfo.programID, "u_ScreenResolution"), 1, (float[2]){width, height});
-
-    double mx, my;
-    glfwGetCursorPos(window, &mx, &my);
-    glUniform2fv(glGetUniformLocation(shadyInfo.programID, "u_Mouse"), 1, (float[2]){mx, my});
-
-    glUniform1f(glGetUniformLocation(shadyInfo.programID, "u_Time"), (float)glfwGetTime());
-}
 
 void shady_load(const char *vertexShader, const char *fragmentShader) {
     shadyInfo.vertexShader = create_shader(vertexShader, GL_VERTEX_SHADER);
     shadyInfo.fragmentShader = create_shader(fragmentShader, GL_FRAGMENT_SHADER);
 
     shadyInfo.programID = create_shader_program(shadyInfo.vertexShader, shadyInfo.fragmentShader);
-    shadyInfo.surface = create_surface();
+    shadyInfo.surface = create_quad(0, 0, 1, 1);
 }
 
 
@@ -201,7 +252,95 @@ void shady_load_default(void) {
 
 
 /* ------ UI --------*/
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb/stb_image.h>
+
+const char* UI_VERT_SHADER ="#version 400\n"\
+"layout (location = 0) in vec2 positions;\n"\
+"layout (location = 1) in vec2 in_texture;\n"\
+"out vec2 out_texture;\n"\
+"void main() {\n"\
+"gl_Position = vec4(positions, 0, 1);\n"\
+"out_texture = in_texture;\n"\
+"}";
+
+const char* UI_FRAG_SHADER ="#version 400\n"\
+"in vec2 out_texture;\n"\
+"uniform sampler2D our_texture;\n"\
+"void main() {\n"\
+"vec3 col = vec3(1);\n"\
+"gl_FragColor = texture(our_texture, out_texture);\n"\
+"}";
+
+typedef struct ShadyUI {
+    int width;
+    int height;
+    GLuint fontID;
+    GLuint programID;
+} ShadyUI;
+
+ShadyUI uiInfo;
+
+void shady_ui_init(const char* fontPath) {
+    // setup ui shaders   
+    GLuint vertexShader = create_shader_from_source(UI_VERT_SHADER, GL_VERTEX_SHADER);
+    GLuint fragmentShader = create_shader_from_source(UI_FRAG_SHADER, GL_FRAGMENT_SHADER);
+
+    uiInfo.programID = create_shader_program(vertexShader, fragmentShader);
+
+    // load texture
+    glGenTextures(1, &uiInfo.fontID);
+    glBindTexture(GL_TEXTURE_2D, uiInfo.fontID);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    int w, h, comp;
+    unsigned char* image = stbi_load(fontPath, &w, &h, &comp, STBI_rgb);
+    if (image) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        stbi_image_free(image);
+    }
+
+    printf("loaded_texture: %s, %dx%d\n", fontPath, w, h);
+}
+
+
+void shady_ui_terminate(void) {
+    
+}
+
+
+void shady_ui_char(const char c, int x, int y) {
+    GLuint quad = create_quad(x, y, 0.05, 0.05);
+    glBindVertexArray(quad);
+
+    float textureCoords[] = {
+        i*(1.f/16.f), j*(1.f/16.f),
+        (1.f + i)*(1.f/16.f), j*(1.f/16.f),
+        (1.f + i)*(1.f/16.f), (1.f + j)*(1.f/16.f),
+        i*(1.f/16.f), (1.f + j)*(1.f/16.f),
+    };
+
+    GLuint tbo;
+	glGenBuffers(1, &tbo);
+	glBindBuffer(GL_ARRAY_BUFFER, tbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(textureCoords), textureCoords, GL_STATIC_DRAW);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+    glEnableVertexAttribArray(1);
+
+    glUseProgram(uiInfo.programID);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+    // glBindVertexArray(0);
+    // glUseProgram(0);
+}
+
 
 void shady_ui_text(const char *text, int x, int y) {
-    printf("%s\n", __func__);
+
 }

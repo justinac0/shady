@@ -1,11 +1,7 @@
-#version 400
+#version 330 core
 
 out vec4 FragColor;
 
-in vec2  ScreenResolution;
-in vec2  MousePosition;
-in float Time;
-
 void main() {
-    FragColor = vec4(cos(Time), sin(Time), sin(Time), 1);
+    FragColor = vec4(0.1, 0.1, 0.1, 1);
 }
