@@ -215,7 +215,15 @@ void shady_update(void) {
 }
 
 
+void shady_swapbuffers(void) {
+    glfwSwapBuffers(window);
+}
+
+
 void shady_draw(void) {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(0, 0, 0, 1);
+
     glUseProgram(shadyInfo.programID);
 
     // TODO: move uniform retrival to callbacks

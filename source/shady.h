@@ -30,6 +30,7 @@ bool shady_init(int width, int height);
 void shady_terminate(void);
 bool shady_is_open(void);
 void shady_update(void);
+void shady_swapbuffers(void);
 
 
 /* ------ Shady Core -------- */
