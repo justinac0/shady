@@ -6,21 +6,21 @@ layout (location = 0) in vec3 position;
 //
 
 // Screen Resolution
-uniform vec2 u_ScreenResolution;
-out     vec2 ScreenResolution;
+uniform vec2 uResolution;
+out     vec2 Resolution;
 
 // Mouse Position
-uniform vec2 u_Mouse;
-out     vec2 MousePosition;
+uniform vec2 uMouse;
+out     vec2 Mouse;
 
 // Time
-uniform float u_Time;
+uniform float uTime;
 out     float Time;
 
 void main() {
     gl_Position = vec4(position, 1.0);
     
-    ScreenResolution = u_ScreenResolution;
-    MousePosition    = u_Mouse;
-    Time             = u_Time;
-} 
+    Resolution = uResolution;
+    Mouse = uMouse;
+    Time = uTime;
+}

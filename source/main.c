@@ -11,6 +11,7 @@ int main(void) {
     shady_ui_init("EGA9x14.png");
 
     shady_load("examples/default/vertex.glsl", "examples/default/fragment.glsl");
+    // shady_load("examples/rtw1/vertex.glsl", "examples/rtw1/fragment.glsl");
 
     while (shady_is_open()) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

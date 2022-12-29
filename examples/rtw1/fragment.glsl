@@ -2,8 +2,8 @@
 
 #version 400
 
-in vec2 ScreenResolution;
-in vec2 MousePosition;
+in vec2 Resolution;
+in vec2 Mouse;
 in float Time;
 
 out vec4 FragColor;
@@ -319,12 +319,12 @@ vec3 ray_color_no_material(Ray ray) {
 }
 
 void setup(vec2 fragCoord) {
-    set_seed(fragCoord/ScreenResolution.xy * Time); // Add time for frame to frame randomness
+    set_seed(fragCoord/Resolution.xy * Time); // Add time for frame to frame randomness
 
     vec3 look_from = vec3(3.0, 10.0, sin(Time) + 2.0);
     vec3 look_at = vec3(0.0, 0.0, -1.0);
     vec3 vup = vec3(0.0, 1.0, 0.0);
-    float aspect = ScreenResolution.x / ScreenResolution.y;
+    float aspect = Resolution.x / Resolution.y;
     float dist_to_focus = length(look_from - look_at);
     float aperture = 2.0;
     camera = camera_new(look_from, look_at, vup, 20.0, aspect, dist_to_focus, aperture);
@@ -365,12 +365,12 @@ void main() {
     // world.scene[1].radius = abs(sin(Time))*.5+.2;
 
     setup(gl_FragCoord.xy);
-    vec2 uv = gl_FragCoord.xy/ScreenResolution.xy;
+    vec2 uv = gl_FragCoord.xy/Resolution.xy;
 
     // Do actual ray tracing
     vec3 col;
     for (int i = 0; i < SAMPLES_PER_PIXEL; i++) {
-        vec2 rand_ray = uv + vec2(rand(), rand()) / ScreenResolution.xy;
+        vec2 rand_ray = uv + vec2(rand(), rand()) / Resolution.xy;
         Ray ray = camera_get_ray(camera, rand_ray);
         col += ray_color(ray);
     }
