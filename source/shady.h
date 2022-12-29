@@ -49,6 +49,9 @@ void shady_draw(void);
 void shady_ui_init(const char* fontPath);
 void shady_ui_terminate(void);
 
+void shady_ui_begin();
+void shady_ui_end();
+
 void shady_ui_char(const char c, int x, int y);
 void shady_ui_text(const char *text, int x, int y);
 

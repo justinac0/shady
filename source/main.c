@@ -13,10 +13,21 @@ int main(void) {
     shady_load("examples/default/vertex.glsl", "examples/default/fragment.glsl");
 
     while (shady_is_open()) {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearColor(0, 0, 0, 1);
+
         shady_update();
 
         shady_draw();
-        shady_ui_char('c', 0, 0);
+
+        // double xpos, ypos;
+        // glfwGetCursorPos(glfwGetCurrentContext(), &xpos, &ypos);
+
+        shady_ui_begin();
+        shady_ui_char('A', 16, 16);
+        shady_ui_char('b', 16 + 9, 16);
+        shady_ui_char('c', 16 + 9 + 9, 16);
+        shady_ui_end();
 
         glfwSwapBuffers(glfwGetCurrentContext());
     }

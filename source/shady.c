@@ -15,10 +15,10 @@ char* read_file(const char* path) {
     }
 
     fseek(fileStream, SEEK_SET, SEEK_END);
-    size_t size = ftell(fileStream);
+    size_t length = ftell(fileStream);
     rewind(fileStream);
-    char* buffer = (char*) malloc(size * sizeof(char) + 1);
-    fread(buffer, sizeof(char), size, fileStream);
+    char* buffer = (char*) calloc(length + 1, sizeof(char));
+    fread(buffer, sizeof(char), length, fileStream);
     return buffer;
 }
 
@@ -113,11 +113,18 @@ GLuint create_shader_program(GLuint vertexShader, GLuint fragmentShader) {
 
 
 GLuint create_quad(int x, int y, float w, float h) {
+
+    float ww = w/640.f;
+    float hh = h/480.f;
+
+    float xoffs = 2*x/640.f + ww;
+    float yoffs = 2*y/480.f + hh;
+
     float quad[] = {
-		-w, h, // tl
-		 w, h, // tr
-		 w,-h, // br
-		-w,-h  // bl
+		(-ww) - (1 - xoffs), ( hh) + (1 - yoffs), // tl
+		( ww) - (1 - xoffs), ( hh) + (1 - yoffs), // tr
+		( ww) - (1 - xoffs), (-hh) + (1 - yoffs), // br
+		(-ww) - (1 - xoffs), (-hh) + (1 - yoffs)  // bl
 	};
 
     int ints[] = {
@@ -149,21 +156,11 @@ GLuint create_quad(int x, int y, float w, float h) {
 
 /* -------------------------------------------------------------------------- */
 
-int i = 0; // temp
-int j = 0; // temp
 bool polys = true; // temp
 
 static void glfw_key_callback(GLFWwindow* pWindow, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(pWindow, true);
-    }
-
-    if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
-        i = (++i % 16);
-    }
-    
-    if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
-        j = (++j % 16);
     }
 
     if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
@@ -221,6 +218,18 @@ void shady_update(void) {
 void shady_draw(void) {
     glUseProgram(shadyInfo.programID);
 
+    // TODO: move uniform retrival to callbacks
+    int width, height;
+    glfwGetWindowSize(window, &width, &height);
+    glUniform2fv(glGetUniformLocation(shadyInfo.programID, "uResolution"), 1, (float[2]){width, height});
+
+    glUniform1f(glGetUniformLocation(shadyInfo.programID, "uTime"), glfwGetTime());
+
+    double xpos, ypos;
+    glfwGetCursorPos(window, &xpos, &ypos);
+    glUniform2fv(glGetUniformLocation(shadyInfo.programID, "uMouse"), 1, (float[2]){xpos, ypos});
+
+
     glBindVertexArray(shadyInfo.surface);
     glEnableVertexAttribArray(0);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -237,7 +246,7 @@ void shady_load(const char *vertexShader, const char *fragmentShader) {
     shadyInfo.fragmentShader = create_shader(fragmentShader, GL_FRAGMENT_SHADER);
 
     shadyInfo.programID = create_shader_program(shadyInfo.vertexShader, shadyInfo.fragmentShader);
-    shadyInfo.surface = create_quad(0, 0, 1, 1);
+    shadyInfo.surface = create_quad(0, 0, 640, 480); // get width and height from callbacks...
 }
 
 
@@ -315,15 +324,28 @@ void shady_ui_terminate(void) {
 }
 
 
+void shady_ui_begin() {
+
+}
+
+
+void shady_ui_end() {
+
+}
+
+
 void shady_ui_char(const char c, int x, int y) {
-    GLuint quad = create_quad(x, y, 0.05, 0.05);
+    int col = c % 16;
+    int row = c / 16; 
+
+    GLuint quad = create_quad(x, y, 9, 14);
     glBindVertexArray(quad);
 
     float textureCoords[] = {
-        i*(1.f/16.f), j*(1.f/16.f),
-        (1.f + i)*(1.f/16.f), j*(1.f/16.f),
-        (1.f + i)*(1.f/16.f), (1.f + j)*(1.f/16.f),
-        i*(1.f/16.f), (1.f + j)*(1.f/16.f),
+        col*(1.f/16.f), row*(1.f/16.f),
+        (1.f + col)*(1.f/16.f), row*(1.f/16.f),
+        (1.f + col)*(1.f/16.f), (1.f + row)*(1.f/16.f),
+        col*(1.f/16.f), (1.f + row)*(1.f/16.f),
     };
 
     GLuint tbo;
@@ -335,9 +357,6 @@ void shady_ui_char(const char c, int x, int y) {
 
     glUseProgram(uiInfo.programID);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-    // glBindVertexArray(0);
-    // glUseProgram(0);
 }
 
 
