@@ -73,6 +73,4 @@ build
 
 *.stackdump
 
-thirdparty/glfw
-thirdparty/imgui
 imgui.ini
