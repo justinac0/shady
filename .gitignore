@@ -72,3 +72,7 @@ build
 *.suo
 
 *.stackdump
+
+thirdparty/glfw
+thirdparty/imgui
+imgui.ini

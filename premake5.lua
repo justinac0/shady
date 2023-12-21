@@ -44,13 +44,13 @@ files {
    "thirdparty/glad/src/*.c"
 }
 
-includedirs{"thirdparty/", "thirdparty/glad/include/", "thirdparty/glfw/include", "thirdparty/stb"}
+includedirs{"thirdparty/", "thirdparty/glad/include/", "thirdparty/glfw/include/", "thirdparty/imgui/","thirdparty/stb/"}
 
 --------------------------------------------------------------------------------
 -- Setup Dependences --
 -----------------------
 
-links { "GLFW" }
+links { "GLFW", "imgui" }
 filter "system:linux"
    links { "dl", "pthread", "m", "X11" }
 
@@ -62,3 +62,4 @@ filter "system:windows"
    links { "opengl32", "gdi32", "GLFW" }
 
 include "thirdparty/glfw.lua"
+include "thirdparty/imgui.lua"

@@ -10,6 +10,8 @@
 #include "shader.hpp"
 #include "surface.hpp"
 
+#include <imgui.h>
+
 
 namespace shady {
 
@@ -27,6 +29,7 @@ namespace shady {
         GLFWwindow *pWindow;
 
         void handle_uniforms();
+        void topbar_menu();
     };
 
 }
