@@ -2,7 +2,7 @@
 -- Workspace Configuration --
 -----------------------------
 workspace "shady-workspace"
-location  ""
+location  "./"
 
 configurations {
    "development",
@@ -27,8 +27,8 @@ filter   "configurations:production"
 ---------------------------
 project  "shady"
 kind     "ConsoleApp"
-language "C"
-cdialect "C99"
+language "C++"
+cppdialect "C++11"
 
 architecture "x86_64"
 
@@ -38,8 +38,8 @@ targetname "shady"
 targetdir  "build/%{cfg.buildcfg}"
 
 files {
-   "source/*.h",
-   "source/*.c",
+   "source/*.hpp",
+   "source/*.cpp",
   
    "thirdparty/glad/src/*.c"
 }

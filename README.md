@@ -9,6 +9,8 @@ Shady is a simple glsl writing environment created for rapid shader development.
 - [glad](https://glad.dav1d.de/)
 
 ### Linux
+[setup]
+- Download premake executable [premake](https://premake.github.io/download/)
 [building]
 - Install [GLFW](glfw.org) development binaries
 - Run `premake5 gmake2` in project directory
