@@ -9,8 +9,7 @@
 
 #include "shader.hpp"
 #include "surface.hpp"
-
-#include <imgui.h>
+#include "ui.hpp"
 
 
 namespace shady {
