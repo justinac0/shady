@@ -26,14 +26,6 @@ Shady is a simple glsl writing environment created for rapid shader development.
 <!-- - Weep -->
 
 
-## Todo
-- [ ] Time Controls
-- [ ] Load shaders by folder
-- [ ] Shader management UI
-- [ ] Uniform Management (through UI)
-- [ ] Cross-Platform (Windows, Linux)
-
-
 ## Showcase
 > ![3 ray traced spheres, left dialetric, middle normal, right metal. Adapted from ray tracing in one weekend (book 1)](images/rtweekend_1.gif)
 > 

@@ -1,4 +1,9 @@
 [submodule "thirdparty/glfw"]
 	path = thirdparty/glfw
 	url = https://github.com/glfw/glfw/
-	branch = 3.4-stable
+	branch = 3.3-stable
+
+[submodule "thirdparty/imgui"]
+	path = thirdparty/imgui
+	url = https://github.com/ocornut/imgui
+	branch = mastergit pull --recurse-submodules
