@@ -1,8 +1,11 @@
 #include "ui.hpp"
 
+#include <iostream>
+
 #include <imgui/backends/imgui_impl_glfw.h>
 #include <imgui/backends/imgui_impl_opengl3.h>
 
+#include <tinydir/tinydir.h>
 
 
 void shady::UI::init() {
@@ -21,14 +24,31 @@ void shady::UI::init() {
 
 
 void topbar_menu() {
+    const char* BASE_DIR = "examples/"; 
+    tinydir_dir dir;
+    tinydir_open(&dir, BASE_DIR);
+
     if (ImGui::BeginMenu("Load")) {
-        ImGui::Text("Not Implemented!");
+        while (dir.has_next) {
+            tinydir_file file;
+            tinydir_readfile(&dir, &file);
+
+            if (file.is_dir && file.name[0] != '.') {
+                if (ImGui::MenuItem(file.name)) {
+                    std::cout << "Opening Shaders: " << BASE_DIR << file.name << "/" << std::endl;
+                }
+            }
+
+            tinydir_next(&dir);
+        }
         ImGui::EndMenu();
     }
 
+    tinydir_close(&dir);
+
     ImGui::Separator();
 
-    if (ImGui::Button("Quit")) {
+    if (ImGui::MenuItem("Quit")) {
         glfwSetWindowShouldClose(glfwGetCurrentContext(), GLFW_TRUE);
     }
 }
