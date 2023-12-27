@@ -41,6 +41,9 @@ files {
    "source/*.hpp",
    "source/*.cpp",
   
+   "source/**/*.hpp",
+   "source/**/*.cpp",
+
    "thirdparty/glad/src/*.c"
 }
 

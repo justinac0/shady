@@ -13,32 +13,6 @@ bool is_valid_shader_dir(tinydir_file file);
 std::vector<std::string> get_dirs(const char* baseDir);
 
 
-/**
- * --------------------------
- * -    TYPES OF EVENTS     -
- * --------------------------
- * 
- * '#' is planned for later.
- * action '->' proposed event call 
- *
- * [KEYBOARD_EVENTS]:
- * ========== BASIC
- *  Escape  -> QUIT
- *  F5      -> RELOAD_SHADERS
- * ========== ADVANCED
- *  Space   -> PAUSE_TIME
- *  Right Arrow/D   -> FORWARD_TIME
- *  Left Arrow/A    -> PREVIOUS_TIME
- *
- * [IO]:
- *  IO Error                -> IO_ERROR(message)
- *  Shader Error            -> SHADER_ERROR(message)
- *  Load Shaders            -> LOAD_SHADERS(vertexPath, fragmentPath, #computePath)
- *  #Create Shader Project  -> CREATE_PROJECT(name)
- * 
- * ...
-*/
-
 void shady::UI::init() {
     IMGUI_CHECKVERSION();
 

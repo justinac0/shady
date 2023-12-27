@@ -63,9 +63,9 @@ void shady::Shady::run() {
     while (!glfwWindowShouldClose(pWindow)) {
         glfwPollEvents();
 
-        if (shady::EventQueue.size() > 0) {
-            
-        }
+        // if (shady::EventQueue.size() > 0) {
+
+        // }
 
         this->surface.begin_draw();
 
