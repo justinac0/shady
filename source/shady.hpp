@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <queue>
 #include <cstring>
 #include <cassert>
 
@@ -13,6 +14,24 @@
 
 
 namespace shady {
+
+    typedef enum {
+        LOAD_SHADERS,
+        REFRESH_SHADERS,
+        QUIT,
+    } EventType;
+
+    typedef struct Event {
+        EventType type;
+        std::string message;
+
+        Event(EventType type, std::string message) {
+            this->type = type;
+            this->message = message;
+        }
+    } Event;
+
+    static std::queue<Event> EventQueue;
 
     class Shady {
     public:
