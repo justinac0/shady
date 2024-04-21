@@ -95,11 +95,9 @@ std::vector<tinydir_file> get_directory_contents(const char* directory) {
 
 
 void topmenu(std::vector<std::string> dirs, shady::Surface &surface) {
-    if (ImGui::BeginMenu("Load")) {
-        
+    if (ImGui::BeginMenu("Load")) {        
         for (auto path : dirs) {
             if (ImGui::MenuItem(path.c_str())) {
-                std::cout << "Opening Shaders: " << path << std::endl; // send to event handler
                 surface = shady::Surface::load_shader_dir_surface(path);
             }
         }
@@ -123,7 +121,7 @@ void shady::UI::draw(bool& showMenu, shady::Surface &surface) {
 
         if (ImGui::BeginMainMenuBar()) {
             if (ImGui::BeginMenu("Shaders")) {
-                topmenu(get_dirs("./examples"), surface); // fixme: stop running on every frame, instead watch folders / files for hotloading
+                topmenu(get_dirs("./examples"), surface);
                 ImGui::EndMenu();
             }
 

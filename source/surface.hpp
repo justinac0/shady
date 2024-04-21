@@ -21,6 +21,7 @@ namespace shady {
         static GLuint create_quad(int x, int y, float w, float h);
         static Surface load_shader_dir_surface(std::string path);
         static Surface load_shader_surface(std::string vertex_shader, std::string fragment_shader);
+        std::string shader_dir;
 
     // private:
         GLuint vertex;

@@ -63,7 +63,10 @@ GLuint shady::Surface::create_quad(int x, int y, float w, float h) {
 }
 
 shady::Surface shady::Surface::load_shader_dir_surface(std::string path) {
-    return shady::Surface::load_shader_surface(path + "/vertex.glsl", path + "/fragment.glsl");
+    shady::Surface surface = shady::Surface::load_shader_surface(path + "/vertex.glsl", path + "/fragment.glsl");
+    surface.shader_dir = path;
+
+    return surface;
 }
 
 shady::Surface shady::Surface::load_shader_surface(std::string vertex_path, std::string fragment_path) {

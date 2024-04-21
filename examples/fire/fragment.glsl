@@ -7,14 +7,15 @@ in float Time;
 
 out vec4 FragColor;
 
-
-float gyroid (vec3 p) { return dot(cos(p),sin(p.yzx)); }
+float gyroid (vec3 p) {
+    return dot(cos(p),sin(p.yzx));
+}
 
 float fbm(vec3 p) {
     float result = 0.;
     float a = .5;
-    for (float i = 0.; i < 9.; ++i)
-    {
+
+    for (float i = 0.; i < 10.; ++i) {
         p.z += (result+Time)*.1;
         result += abs(gyroid(p/a)*a);
         a /= 1.5;

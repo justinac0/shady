@@ -1,15 +1,26 @@
 #include "shady.hpp"
 
-bool showMenu = true;
+typedef enum {
+    KEY_QUIT,
+    KEY_REFRESH,
+    KEY_HIDE_MENU,
+    KEY_EVENT_COUNT
+} KeyEventE;
+
+std::queue<KeyEventE> keyQueue;
+
 void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
+        keyQueue.push(KEY_QUIT);
+    }
+
+    if (key == GLFW_KEY_F5 && action == GLFW_PRESS) {
+        keyQueue.push(KEY_REFRESH);    
     }
 
     if (key == GLFW_KEY_H && action == GLFW_PRESS) {
-        showMenu = !showMenu;
+        keyQueue.push(KEY_HIDE_MENU);
     }
-
 }
 
 
@@ -59,6 +70,7 @@ void shady::Shady::run() {
 
     this->surface = shady::Surface::load_shader_dir_surface("examples/default");
 
+    bool toggleMenu = true;
     while (!glfwWindowShouldClose(pWindow)) {
         glfwPollEvents();
 
@@ -71,9 +83,32 @@ void shady::Shady::run() {
         handle_uniforms();
         this->surface.end_draw();
 
-        UI::draw(showMenu, surface);
+        UI::draw(toggleMenu, surface);
 
         glfwSwapBuffers(this->pWindow);
+
+        if (!keyQueue.empty()) {
+            KeyEventE key_event = keyQueue.front();
+            keyQueue.pop();
+        
+            switch (key_event) {
+                default:
+                    printf("Unknown Key Event...\n");
+                    break;
+                case KEY_QUIT:
+                    printf("Quitting Shady...\n");
+                    glfwSetWindowShouldClose(this->pWindow, GLFW_TRUE);
+                    break;
+                case KEY_HIDE_MENU:
+                    printf("Toggling Menu...\n");
+                    toggleMenu = !toggleMenu;
+                    break;
+                case KEY_REFRESH:
+                    printf("Refreshing Shaders...\n");
+                    this->surface = shady::Surface::load_shader_dir_surface(this->surface.shader_dir);
+                    break;
+            }
+        }
     }
 
     UI::terminate();
