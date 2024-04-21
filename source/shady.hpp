@@ -1,16 +1,17 @@
 #pragma once
 
 #include <iostream>
+#include <queue>
 #include <cstring>
 #include <cassert>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "debug.hpp"
 #include "shader.hpp"
 #include "surface.hpp"
 #include "ui.hpp"
-
 
 namespace shady {
 
