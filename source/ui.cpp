@@ -1,11 +1,5 @@
 #include "ui.hpp"
 
-#include <iostream>
-
-#include <imgui/backends/imgui_impl_glfw.h>
-#include <imgui/backends/imgui_impl_opengl3.h>
-
-#include <tinydir/tinydir.h>
 
 // IMPORTANT: my name is c++ i parse a file in 1 go (single-pase compiler be like, doo-didodo - Zyrn)...
 std::vector<tinydir_file> get_directory_contents(const char* directory);
@@ -13,7 +7,7 @@ bool is_valid_shader_dir(tinydir_file file);
 std::vector<std::string> get_dirs(const char* baseDir);
 
 
-void shady::UI::init() {
+void shady::UI::init(void* window) {
     IMGUI_CHECKVERSION();
 
     ImGui::CreateContext();
@@ -23,7 +17,7 @@ void shady::UI::init() {
 
     ImGui::StyleColorsDark();
 
-    ImGui_ImplGlfw_InitForOpenGL(glfwGetCurrentContext(), true);
+    ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)window, true);
     ImGui_ImplOpenGL3_Init("#version 100");
 }
 
@@ -100,27 +94,28 @@ std::vector<tinydir_file> get_directory_contents(const char* directory) {
 }
 
 
-void topmenu(std::vector<std::string> dirs) {
+void topmenu(std::vector<std::string> dirs, shady::Surface &surface) {
     if (ImGui::BeginMenu("Load")) {
         
         for (auto path : dirs) {
             if (ImGui::MenuItem(path.c_str())) {
                 std::cout << "Opening Shaders: " << path << std::endl; // send to event handler
+                surface = shady::Surface::load_shader_dir_surface(path);
             }
         }
-                
+  
         ImGui::EndMenu();
     }
 
     ImGui::Separator();
 
     if (ImGui::MenuItem("Quit")) {
-        glfwSetWindowShouldClose(glfwGetCurrentContext(), GLFW_TRUE);  // send to event handler
+        exit(0); // surely unsafe :)
     }
 }
 
 
-void shady::UI::draw(bool& showMenu) {
+void shady::UI::draw(bool& showMenu, shady::Surface &surface) {
     if (showMenu) {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -128,7 +123,7 @@ void shady::UI::draw(bool& showMenu) {
 
         if (ImGui::BeginMainMenuBar()) {
             if (ImGui::BeginMenu("Shaders")) {
-                topmenu(get_dirs("./examples")); // fixme: stop running on every frame, instead watch folders / files for hotloading
+                topmenu(get_dirs("./examples"), surface); // fixme: stop running on every frame, instead watch folders / files for hotloading
                 ImGui::EndMenu();
             }
 

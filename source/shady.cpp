@@ -1,6 +1,5 @@
 #include "shady.hpp"
 
-
 bool showMenu = true;
 void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
@@ -18,12 +17,10 @@ shady::Shady::Shady(int width, int height) {
     this->width = width;
     this->height = height;
 
-    if (!glfwInit()) {
-        // assert
-    }
+    assert_stmt(!glfwInit());
 
     this->pWindow = glfwCreateWindow(this->width, this->height, "shady", nullptr, nullptr);
-    if (!this->pWindow) assert(this->pWindow != NULL);
+    assert_stmt(!this->pWindow);
 
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     glfwSetKeyCallback(this->pWindow, glfw_key_callback);
@@ -58,14 +55,12 @@ inline void shady::Shady::handle_uniforms() {
 
 
 void shady::Shady::run() {
-    UI::init();
+    UI::init(this->pWindow);
+
+    this->surface = shady::Surface::load_shader_dir_surface("examples/default");
 
     while (!glfwWindowShouldClose(pWindow)) {
         glfwPollEvents();
-
-        // if (shady::EventQueue.size() > 0) {
-
-        // }
 
         this->surface.begin_draw();
 
@@ -76,7 +71,7 @@ void shady::Shady::run() {
         handle_uniforms();
         this->surface.end_draw();
 
-        UI::draw(showMenu);
+        UI::draw(showMenu, surface);
 
         glfwSwapBuffers(this->pWindow);
     }
