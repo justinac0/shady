@@ -12,7 +12,7 @@ project "ImGui"
 	targetdir "../build/%{cfg.buildcfg}"
 	objdir "../objects/"
 
-	includedirs { "imgui/" }
+	includedirs { "imgui/", "glfw/include/" }
 
 	files
 	{
@@ -33,6 +33,7 @@ project "ImGui"
 		"imgui/backends/imgui_impl_glfw.h",
 	}
 
+	links { "GLFW" }
 	filter "system:windows"
 		systemversion "latest"
 		cppdialect "C++17"

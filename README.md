@@ -23,7 +23,7 @@ Shady is a simple glsl writing environment created for rapid shader development.
 [building]
 - Run `premake5 vs2019` in project directory
 - Open `*.sln` file with `Visual Studio (Community/Entiprise)`
-<!-- - Weep -->
+- If you have Cygwin gcc/g++ compilers installed you can follow the Linux building section.
 
 
 ## Showcase
